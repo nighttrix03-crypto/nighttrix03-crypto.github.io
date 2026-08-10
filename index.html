@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MiraOS 1.1 - نظام تشغيل للألعاب والتطبيقات</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --accent: #60a5fa;
+            --bg: #0a0e1a;
+            --bg-card: #111827;
+            --bg-light: #1f2937;
+            --text: #f3f4f6;
+            --text-muted: #9ca3af;
+            --border: #374151;
+            --success: #22c55e;
+            --warning: #fbbf24;
+            --danger: #ef4444;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        nav {
+            position: fixed;
+            top: 0; width: 100%;
+            background: rgba(10, 14, 26, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 1000;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text);
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .lang-toggle {
+            background: var(--bg-light);
+            border: 1px solid var(--border);
+            color: var(--text);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 8rem 2rem 4rem;
+        }
+        .badge {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            display: inline-block;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 2rem;
+        }
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+        }
+        .btn-primary:hover { transform: translateY(-2px); }
+        .btn-secondary {
+            background: var(--bg-light);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-warning {
+            background: linear-gradient(135deg, #d97706, #b45309);
+            color: white;
+            box-shadow: 0 4px 20px rgba(217, 119, 6, 0.4);
+        }
+        .btn-warning:hover { transform: translateY(-2px); }
+        section {
+            padding: 5rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+        }
+        .section-title span {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .feature-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        .feature-card h3 { font-size: 1.25rem; margin-bottom: 0.75rem; }
+        .feature-card p { color: var(--text-muted); }
+        .download-section {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(37,99,235,0.1), rgba(96,165,250,0.1));
+            border-radius: 2rem;
+            padding: 4rem 2rem;
+            border: 1px solid var(--border);
+        }
+        .version-badge {
+            display: inline-block;
+            background: var(--bg-light);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+        }
+        .alert-box {
+            background: linear-gradient(135deg, rgba(239,68,68,0.15), rgba(239,68,68,0.05));
+            border: 2px solid var(--danger);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            text-align: center;
+        }
+        .alert-box h3 {
+            color: var(--danger);
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .alert-box p {
+            color: var(--text);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        .setup-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin: 2rem auto;
+            max-width: 800px;
+            text-align: right;
+        }
+        .setup-box h3 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+        }
+        .code-block {
+            background: #0f172a;
+            color: #22c55e;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            font-family: monospace;
+            direction: ltr;
+            text-align: left;
+            margin: 1rem 0;
+            overflow-x: auto;
+            font-size: 1.1rem;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+        }
+        .stat-card h3 { font-size: 2.5rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .stat-card p { color: var(--text-muted); }
+        .two-files {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 900px;
+            margin: 2rem auto;
+        }
+        .file-card {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        .file-card:hover { border-color: var(--primary); }
+        .file-card .file-icon { font-size: 3rem; margin-bottom: 1rem; }
+        .file-card h4 { font-size: 1.2rem; margin-bottom: 0.5rem; }
+        .file-card p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .nav-links { display: none; }
+            .two-files { grid-template-columns: 1fr; }
+        }
+        html[dir="ltr"] .hero, html[dir="ltr"] .section-title, html[dir="ltr"] .download-section { text-align: left; align-items: flex-start; }
+        html[dir="ltr"] .setup-box { text-align: left; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#" class="logo">
+            <span style="font-size:2rem;">🎮</span>
+            <span>MiraOS</span>
+        </a>
+        <div class="nav-links">
+            <a href="#features" data-ar="المميزات" data-en="Features">المميزات</a>
+            <a href="#download" data-ar="التحميل" data-en="Download">التحميل</a>
+            <a href="#setup" data-ar="التثبيت" data-en="Setup">التثبيت</a>
+            <button class="lang-toggle" onclick="toggleLang()">EN</button>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="badge" data-ar="نظام تشغيل للألعاب والتطبيقات 🚀" data-en="Gaming & Apps OS 🚀">نظام تشغيل للألعاب والتطبيقات 🚀</div>
+        <h1 data-ar="MiraOS 1.1 — نظام واحد، ثلاثة عوالم" data-en="MiraOS 1.1 — One OS, Three Worlds">MiraOS 1.1 — نظام واحد، ثلاثة عوالم</h1>
+        <p data-ar="نظام Arch Linux مخصص للألعاب. يدعم ألعاب Windows عبر Wine، وتطبيقات Android عبر Waydroid، مع متجر Mira Store Pro (50+ تطبيق مجاني)." data-en="Arch Linux OS built for gaming. Supports Windows games via Wine, Android apps via Waydroid, with Mira Store Pro (50+ free apps).">نظام Arch Linux مخصص للألعاب. يدعم ألعاب Windows عبر Wine، وتطبيقات Android عبر Waydroid، مع متجر Mira Store Pro (50+ تطبيق مجاني).</p>
+        <div class="btn-group">
+            <a href="#download" class="btn btn-primary" data-ar="⬇️ تحميل MiraOS 1.1" data-en="⬇️ Download MiraOS 1.1">⬇️ تحميل MiraOS 1.1</a>
+            <a href="#features" class="btn btn-secondary" data-ar="اكتشف المميزات →" data-en="Explore Features →">اكتشف المميزات →</a>
+        </div>
+    </section>
+
+    <section id="stats">
+        <div class="stats">
+            <div class="stat-card">
+                <h3>3.3GB</h3>
+                <p data-ar="حجم الـ ISO" data-en="ISO Size">حجم الـ ISO</p>
+            </div>
+            <div class="stat-card">
+                <h3>64-bit</h3>
+                <p data-ar="معمارية النظام" data-en="Architecture">معمارية النظام</p>
+            </div>
+            <div class="stat-card">
+                <h3>2026</h3>
+                <p data-ar="تاريخ الإصدار" data-en="Release Date">تاريخ الإصدار</p>
+            </div>
+            <div class="stat-card">
+                <h3>50+</h3>
+                <p data-ar="تطبيق في المتجر" data-en="Apps in Store">تطبيق في المتجر</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="features">
+        <h2 class="section-title"><span data-ar="المميزات" data-en="Features">المميزات</span> <span data-ar="الأساسية" data-en="Core">الأساسية</span></h2>
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">🛒</div>
+                <h3 data-ar="Mira Store Pro" data-en="Mira Store Pro">Mira Store Pro</h3>
+                <p data-ar="متجر مدمج بـ 50+ تطبيق مجاني. Linux + Windows + Android + Dev Tools. يفتح Terminal حقيقي لما تضغط Install!" data-en="Built-in store with 50+ free apps. Linux + Windows + Android + Dev Tools. Opens real Terminal when you click Install!">متجر مدمج بـ 50+ تطبيق مجاني. Linux + Windows + Android + Dev Tools. يفتح Terminal حقيقي لما تضغط Install!</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎮</div>
+                <h3 data-ar="ألعاب Windows" data-en="Windows Games">ألعاب Windows</h3>
+                <p data-ar="Wine مثبت مسبقاً. شغل Epic Games، Battle.net، EA App، Ubisoft Connect، وغيرها بنقرة واحدة." data-en="Wine pre-installed. Run Epic Games, Battle.net, EA App, Ubisoft Connect, and more with one click.">Wine مثبت مسبقاً. شغل Epic Games، Battle.net، EA App، Ubisoft Connect، وغيرها بنقرة واحدة.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 data-ar="تطبيقات Android" data-en="Android Apps">تطبيقات Android</h3>
+                <p data-ar="Waydroid مدمج. شغل TikTok، PUBG Mobile، WhatsApp، Instagram، وكل تطبيقات Android على سطح المكتب." data-en="Waydroid integrated. Run TikTok, PUBG Mobile, WhatsApp, Instagram, and all Android apps on desktop.">Waydroid مدمج. شغل TikTok، PUBG Mobile، WhatsApp، Instagram، وكل تطبيقات Android على سطح المكتب.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 data-ar="أداء خرافي" data-en="Blazing Fast">أداء خرافي</h3>
+                <p data-ar="مبني على Arch Linux مع نواة محسّنة. تحديثات تلقائية عبر pacman." data-en="Built on Arch Linux with optimized kernel. Automatic updates via pacman.">مبني على Arch Linux مع نواة محسّنة. تحديثات تلقائية عبر pacman.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🖥️</div>
+                <h3 data-ar="واجهة Cinnamon" data-en="Cinnamon Desktop">واجهة Cinnamon</h3>
+                <p data-ar="واجهة أنيقة وسريعة مع تخصيصات مخصصة للاعبين والمطورين." data-en="Sleek and fast desktop with customizations for gamers and developers.">واجهة أنيقة وسريعة مع تخصيصات مخصصة للاعبين والمطورين.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3 data-ar="أدوات المطورين" data-en="Dev Tools">أدوات المطورين</h3>
+                <p data-ar="VS Code، IntelliJ، PyCharm، Docker، Node.js، Python، Git — كلها جاهزة." data-en="VS Code, IntelliJ, PyCharm, Docker, Node.js, Python, Git — all ready.">VS Code، IntelliJ، PyCharm، Docker، Node.js، Python، Git — كلها جاهزة.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="download">
+        <div class="download-section">
+            <div class="version-badge">v1.1 — Arch Linux Based — 2026</div>
+            <h2 data-ar="⬇️ ملفان مطلوبان للتحميل" data-en="⬇️ Two Files Required">⬇️ ملفان مطلوبان للتحميل</h2>
+            <p data-ar="لتثبيت MiraOS بشكل كامل، تحتاج تحمل ملفين: الـ ISO + سكربت التفعيل" data-en="To install MiraOS fully, you need to download two files: the ISO + activation script">لتثبيت MiraOS بشكل كامل، تحتاج تحمل ملفين: الـ ISO + سكربت التفعيل</p>
+
+            <div class="two-files">
+                <div class="file-card">
+                    <div class="file-icon">💿</div>
+                    <h4 data-ar="MiraOS-1.1-Final.iso" data-en="MiraOS-1.1-Final.iso">MiraOS-1.1-Final.iso</h4>
+                    <p data-ar="نظام التشغيل (3.3 GB) — حرقه على USB أو شغله في VM" data-en="Operating system (3.3 GB) — Burn to USB or run in VM">نظام التشغيل (3.3 GB) — حرقه على USB أو شغله في VM</p>
+                    <a href="https://drive.google.com" class="btn btn-primary" target="_blank" data-ar="تحميل ISO" data-en="Download ISO">تحميل ISO</a>
+                </div>
+                <div class="file-card">
+                    <div class="file-icon">📜</div>
+                    <h4 data-ar="setup-complete.sh" data-en="setup-complete.sh">setup-complete.sh</h4>
+                    <p data-ar="سكربت التفعيل (5 KB) — يفعل المتجر بالكامل" data-en="Activation script (5 KB) — Activates the store fully">سكربت التفعيل (5 KB) — يفعل المتجر بالكامل</p>
+                    <a href="https://drive.usercontent.google.com/download?id=1y9EzqiIqoD-Huv-FvvvwA-SR-3w2kiuE&export=download&authuser=0" class="btn btn-warning" target="_blank" data-ar="تحميل السكربت" data-en="Download Script">تحميل السكربت</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="setup">
+        <h2 class="section-title"><span data-ar="خطوات" data-en="Steps">خطوات</span> <span data-ar="التثبيت" data-en="Installation">التثبيت</span></h2>
+
+        <div class="alert-box">
+            <h3 data-ar="🚨 مهم جداً: بدون setup-complete.sh المتجر ما يشتغل!" data-en="🚨 Very Important: Without setup-complete.sh the store won't work!">🚨 مهم جداً: بدون setup-complete.sh المتجر ما يشتغل!</h3>
+            <p data-ar="بعد ما تثبت MiraOS، لازم تشغل السكربت مرة واحدة عشان يثبت yay ويُفعل Mira Store Pro." data-en="After installing MiraOS, you MUST run the script once to install yay and activate Mira Store Pro.">بعد ما تثبت MiraOS، لازم تشغل السكربت مرة واحدة عشان يثبت yay ويُفعل Mira Store Pro.</p>
+        </div>
+
+        <div class="setup-box">
+            <h3 data-ar="📋 خطوات التثبيت" data-en="📋 Installation Steps">📋 خطوات التثبيت</h3>
+            <p><strong data-ar="الخطوة 1:" data-en="Step 1:">الخطوة 1:</strong> <span data-ar="ثبت MiraOS من الـ ISO" data-en="Install MiraOS from the ISO">ثبت MiraOS من الـ ISO</span></p>
+            <p><strong data-ar="الخطوة 2:" data-en="Step 2:">الخطوة 2:</strong> <span data-ar="افتح Terminal" data-en="Open Terminal">افتح Terminal</span></p>
+            <p><strong data-ar="الخطوة 3:" data-en="Step 3:">الخطوة 3:</strong> <span data-ar="اكتب هالأمر (ياخذ 5 دقائق):" data-en="Type this command (takes 5 minutes):">اكتب هالأمر (ياخذ 5 دقائق):</span></p>
+            <div class="code-block">bash setup-complete.sh</div>
+            <p><strong data-ar="الخطوة 4:" data-en="Step 4:">الخطوة 4:</strong> <span data-ar="افتح Mira Store Pro من القائمة وثبت أي تطبيق!" data-en="Open Mira Store Pro from the menu and install any app!">افتح Mira Store Pro من القائمة وثبت أي تطبيق!</span></p>
+            <hr style="border-color: var(--border); margin: 1.5rem 0;">
+            <p style="color:var(--text-muted);font-size:0.9rem;" data-ar="💡 تحديثات النظام: اكتب sudo pacman -Syu في Terminal" data-en="💡 System updates: type sudo pacman -Syu in Terminal">💡 تحديثات النظام: اكتب <code>sudo pacman -Syu</code> في Terminal</p>
+        </div>
+    </section>
+
+    <section id="about">
+        <h2 class="section-title"><span data-ar="عن" data-en="About">عن</span> <span data-ar="MiraOS" data-en="MiraOS">MiraOS</span></h2>
+        <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:1rem;padding:2rem;max-width:800px;margin:0 auto;">
+            <p style="color:var(--text-muted);font-size:1.1rem;line-height:1.8;" data-ar="MiraOS هو نظام تشغيل مبني على Arch Linux مصمم خصيصاً للاعبين والمطورين. يجمع بين قوة Arch وسلاسة Cinnamon مع دعم كامل لتطبيقات Android وWindows. سواء تبي تلعب ألعابك المفضلة أو تطور مشاريعك — MiraOS جاهز لك!" data-en="MiraOS is an Arch Linux-based operating system designed for gamers and developers. It combines the power of Arch with the smoothness of Cinnamon, with full support for Android and Windows apps.">MiraOS هو نظام تشغيل مبني على Arch Linux مصمم خصيصاً للاعبين والمطورين. يجمع بين قوة Arch وسلاسة Cinnamon مع دعم كامل لتطبيقات Android وWindows. سواء تبي تلعب ألعابك المفضلة أو تطور مشاريعك — MiraOS جاهز لك!</p>
+        </div>
+    </section>
+
+    <footer>
+        <p data-ar="© 2026 MiraOS — نظام تشغيل للألعاب | صنع بـ ❤️" data-en="© 2026 MiraOS — Gaming OS | Made with ❤️">© 2026 MiraOS — نظام تشغيل للألعاب | صنع بـ ❤️</p>
+    </footer>
+
+    <script>
+        let currentLang = 'ar';
+        function toggleLang() {
+            const html = document.documentElement;
+            const btn = document.querySelector('.lang-toggle');
+            if (currentLang === 'ar') {
+                currentLang = 'en';
+                html.lang = 'en';
+                html.dir = 'ltr';
+                btn.textContent = 'AR';
+            } else {
+                currentLang = 'ar';
+                html.lang = 'ar';
+                html.dir = 'rtl';
+                btn.textContent = 'EN';
+            }
+            document.querySelectorAll('[data-ar][data-en]').forEach(el => {
+                el.textContent = el.getAttribute('data-' + currentLang);
+            });
+        }
+    </script>
+</body>
+</html>
